@@ -1,6 +1,10 @@
+[![Entered on make.fun](https://img.shields.io/badge/Entered%20on-make.fun-6C5CE7)](https://make.fun/bounty/best-household-budget-site-20261126-1457)
+[![Bounty: $50](https://img.shields.io/badge/Bounty-%2450-green)](https://make.fun/bounty/best-household-budget-site-20261126-1457)
+[![Static site](https://img.shields.io/badge/Static-HTML%20%2F%20CSS%20%2F%20JS-blue)](https://make.fun/bounty/best-household-budget-site-20261126-1457)
+
 # HomeLedger — a household budget site
 
-Entry for make.fun's **best-household-budget-site-20261126-1457** bounty ($50, top 10 share $5 each).
+Entry for make.fun's [**best-household-budget-site-20261126-1457** bounty](https://make.fun/bounty/best-household-budget-site-20261126-1457) ($50, top 10 share $5 each).
 Deadline: 29 November 2026, 14:57 UTC.
 
 ## What it is
@@ -46,20 +50,24 @@ app/
   styles.css       all styling (system fonts only)
   app.js           data + rendering + all interactions (no libraries)
 screenshots/      real renders of the site (desktop + phone)
+vendor/
+  makefun-frontend.ts   kit vendor file (unchanged), writes the real dossier.json
 DOSSIER.md         design decisions, figures and verification notes
 LICENSE            MIT
 ```
 
 ## Submission note
 
-`vendor/makefun-frontend.ts` (copied from the competition kit, unchanged) is
-**not** in this repository yet: the kit is downloaded at submission time with
-the user's approval, and the file is added then. `main.ts` builds without it
-— it copies `app/` and `screenshots/` to the output dir and writes
-`dossier.json` from a local fallback builder — but the parent must re-run the
-build once the vendor file is in place so the kit's `buildDossier` writes the
-real `dossier.json`, and re-check with the kit's own `check` before submitting.
+`vendor/makefun-frontend.ts` is copied from the competition kit, unchanged.
+`main.ts` calls its `buildDossier` with the starter's gate caps
+(`text_max_bytes: 163840`, screenshots max 4 × 256 KiB, `app_max_files: 993`,
+`app_max_bytes: 16777216`) and writes the returned bytes verbatim to
+`dossier.json`, so the build produces the real vendor dossier (about 699 KB,
+under the 1.5 MiB limit).
 
-Gate limits verified locally (`node main.ts --check`, 7/7 pass): 4 screenshots,
+Gate limits verified locally (`node main.ts --check`, 8/8 pass): 4 screenshots,
 each ≤ 256 KiB, long side ≤ 1280, short side ≥ 360; `app/index.html` under
-1 MiB; no external URLs or network calls anywhere in `app/`.
+1 MiB; `app/` within its file-count and byte limits; no external URLs or
+network calls anywhere in `app/`.
+
+<sub>Entered on make.fun — [best-household-budget-site-20261126-1457](https://make.fun/bounty/best-household-budget-site-20261126-1457) bounty entry.</sub>
