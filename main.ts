@@ -172,6 +172,11 @@ function check(): boolean {
   if (indexSize > 1024 * 1024) problems.push("app/index.html over 1 MiB");
   else ok.push("app/index.html under 1 MiB");
 
+  const appBytes = files.reduce((s, f) => s + statSync(f).size, 0);
+  if (files.length > 993) problems.push(`app/: ${files.length} files > gate limit 993`);
+  else if (appBytes > 16 * 1024 * 1024) problems.push(`app/: ${appBytes} bytes > gate limit 16 MiB`);
+  else ok.push(`app/ within gate limits (${files.length} files, ${appBytes} bytes)`);
+
   for (const line of ok) console.log("PASS " + line);
   for (const line of problems) console.log("FAIL " + line);
   console.log(problems.length === 0 ? "CHECK OK" : `CHECK FAILED: ${problems.length} problem(s)`);
