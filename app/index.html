@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HomeLedger — Household Budget</title>
+<meta name="description" content="HomeLedger: a household budget site that runs fully offline. Dashboard, transactions, budgets, savings goals, reports and calculators for one family's month.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <div class="brand">
+      <a href="#/" class="brand-name">HomeLedger</a>
+      <span class="brand-tag">a household budget, kept in one place</span>
+    </div>
+    <nav aria-label="Main">
+      <a href="#/">Dashboard</a>
+      <a href="#/transactions">Transactions</a>
+      <a href="#/budget">Budget</a>
+      <a href="#/goals">Goals</a>
+      <a href="#/reports">Reports</a>
+      <a href="#/tools">Tools</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="household-line"><b id="household-name">The Alvarez Household</b> · <span id="household-sub"></span></p>
+
+  <!-- ============ Dashboard ============ -->
+  <section class="page" id="page-dashboard">
+    <h1>Dashboard — <span data-month>November 2026</span></h1>
+    <div class="stat-grid">
+      <div class="card stat"><span class="stat-label">Take-home pay</span><b id="stat-income">—</b><span class="muted">2 salaries, after tax</span></div>
+      <div class="card stat"><span class="stat-label">Spent so far</span><b id="stat-spent">—</b><span class="muted">42 transactions</span></div>
+      <div class="card stat"><span class="stat-label">Moved to savings</span><b id="stat-saved">—</b><span class="muted">savings rate <b id="stat-rate">—</b></span></div>
+      <div class="card stat"><span class="stat-label">Left to assign</span><b id="stat-left">—</b><span class="muted">unbudgeted cash</span></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h2>Where the money went</h2>
+        <div class="donut-wrap"><div id="donut"></div>
+        <ul id="donut-legend" class="legend"></ul></div>
+      </div>
+      <div class="card">
+        <h2>Budget health</h2>
+        <ul id="health-list" class="plain"></ul>
+        <p><a href="#/budget">See the full budget →</a></p>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h2>Upcoming bills</h2>
+        <ul id="bills-list" class="plain"></ul>
+      </div>
+      <div class="card">
+        <h2>Latest spending</h2>
+        <ul id="recent-list" class="plain"></ul>
+        <p><a href="#/transactions">See all transactions →</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Transactions ============ -->
+  <section class="page" id="page-transactions" hidden>
+    <h1>Transactions — <span data-month>November 2026</span></h1>
+    <div class="card">
+      <div class="tx-controls">
+        <label>Category
+          <select id="tx-filter"><option value="all">All categories</option></select>
+        </label>
+        <label>Search
+          <input type="search" id="tx-search" placeholder="e.g. GreenMart, rent, cinema" aria-label="Search transactions">
+        </label>
+      </div>
+      <p class="muted"><span id="tx-count"></span> · <span id="tx-total"></span></p>
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th>Date</th><th>Description</th><th>Category</th><th class="num">Amount</th></tr></thead>
+        <tbody id="tx-body"></tbody>
+      </table>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Add a transaction</h2>
+      <form id="tx-form">
+        <label>Date <input type="date" name="date" value="2026-11-26" required></label>
+        <label>Description <input type="text" name="merchant" placeholder="e.g. GreenMart — weekly shop" required></label>
+        <label>Category
+          <select name="category">
+            <option value="groceries">Groceries</option>
+            <option value="housing">Housing</option>
+            <option value="transport">Transport</option>
+            <option value="utilities">Utilities</option>
+            <option value="dining">Dining out</option>
+            <option value="entertainment">Entertainment</option>
+            <option value="health">Health</option>
+            <option value="clothing">Clothing</option>
+            <option value="childcare">Childcare</option>
+            <option value="misc">Miscellaneous</option>
+          </select>
+        </label>
+        <label>Amount ($) <input type="number" name="amount" min="0.01" step="0.01" placeholder="0.00" required></label>
+        <button type="submit">Add transaction</button>
+        <span id="tx-msg" class="muted" role="status"></span>
+      </form>
+      <p class="muted">Adding a transaction updates the totals on every page immediately. Nothing leaves this browser — there is no account and no server.</p>
+    </div>
+  </section>
+
+  <!-- ============ Budget ============ -->
+  <section class="page" id="page-budget" hidden>
+    <h1>Budget — <span data-month>November 2026</span></h1>
+    <div class="card" id="budget-summary"></div>
+    <div class="card">
+      <h2>By category</h2>
+      <div id="budget-rows"></div>
+      <p class="muted">Change any monthly budget above and the bars, totals and the dashboard update at once.</p>
+    </div>
+    <div class="card">
+      <h2>The 50 / 30 / 20 check</h2>
+      <div id="rule-503020"></div>
+      <p><a href="#/tools">Try the 50 / 30 / 20 calculator with your own pay →</a></p>
+    </div>
+  </section>
+
+  <!-- ============ Goals ============ -->
+  <section class="page" id="page-goals" hidden>
+    <h1>Savings goals</h1>
+    <p class="muted" id="goal-summary"></p>
+    <div class="grid-2" id="goal-rows"></div>
+    <div class="card">
+      <h2>Add a goal</h2>
+      <form id="goal-form">
+        <label>Goal name <input type="text" name="name" placeholder="e.g. New sofa" required></label>
+        <label>Target ($) <input type="number" name="target" min="1" step="1" placeholder="1000" required></label>
+        <label>Already saved ($) <input type="number" name="saved" min="0" step="1" value="0"></label>
+        <button type="submit">Add goal</button>
+        <span id="goal-msg" class="muted" role="status"></span>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ Reports ============ -->
+  <section class="page" id="page-reports" hidden>
+    <h1>Reports — June to <span data-month>November 2026</span></h1>
+    <div class="card">
+      <h2>Spending and saving by month</h2>
+      <div id="trend-chart"></div>
+      <p class="legend-line"><span class="dot" style="background:#2e86ab"></span> Spent &nbsp; <span class="dot" style="background:#1d5c46"></span> Saved</p>
+    </div>
+    <div class="card">
+      <h2>November by category</h2>
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th>Category</th><th class="num">Spent</th><th class="num">Share</th><th class="num">Budget</th><th class="num">Over / under</th></tr></thead>
+        <tbody id="cat-table"></tbody>
+      </table>
+      </div>
+    </div>
+    <div class="card">
+      <h2>What the numbers say</h2>
+      <ul id="insights" class="insights"></ul>
+    </div>
+  </section>
+
+  <!-- ============ Tools ============ -->
+  <section class="page" id="page-tools" hidden>
+    <h1>Tools &amp; calculators</h1>
+    <p class="muted">Four small calculators. They run entirely in this page, on the household's real figures where a comparison helps.</p>
+    <div class="grid-2">
+      <div class="card">
+        <h2>50 / 30 / 20 split</h2>
+        <form id="calc-split">
+          <label>Monthly take-home pay ($) <input type="number" name="pay" min="0" step="50" value="6850"></label>
+        </form>
+        <p id="calc-split-out" class="calc-out"></p>
+      </div>
+      <div class="card">
+        <h2>Can we afford it?</h2>
+        <form id="calc-afford">
+          <label>Price ($) <input type="number" name="price" min="0" step="10" value="900"></label>
+          <label>Save over (months) <input type="number" name="months" min="1" step="1" value="6"></label>
+        </form>
+        <p id="calc-afford-out" class="calc-out"></p>
+      </div>
+      <div class="card">
+        <h2>Emergency fund</h2>
+        <form id="calc-emergency">
+          <label>Essential monthly spending ($) <input type="number" name="monthly" min="0" step="50" value="3400"></label>
+          <label>Months of cover <input type="number" name="months" min="1" step="1" value="6"></label>
+        </form>
+        <p id="calc-emergency-out" class="calc-out"></p>
+      </div>
+      <div class="card">
+        <h2>Debt payoff</h2>
+        <form id="calc-debt">
+          <label>Balance owed ($) <input type="number" name="balance" min="0" step="100" value="2400"></label>
+          <label>APR (%) <input type="number" name="apr" min="0" step="0.1" value="19.9"></label>
+          <label>Monthly payment ($) <input type="number" name="pay" min="0" step="10" value="200"></label>
+        </form>
+        <p id="calc-debt-out" class="calc-out"></p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p><b>HomeLedger</b> — a household budget site. The household, its people and its figures are a fictional sample made to show the site working; every number on the page is computed from the same transaction list, so the totals always agree.</p>
+    <p class="muted">Runs fully offline from its own files — no account, no server, no network requests. Open <code>app/index.html</code> in any desktop or phone browser.</p>
+    <p class="muted"><a href="#/">Dashboard</a> · <a href="#/transactions">Transactions</a> · <a href="#/budget">Budget</a> · <a href="#/goals">Goals</a> · <a href="#/reports">Reports</a> · <a href="#/tools">Tools</a></p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
