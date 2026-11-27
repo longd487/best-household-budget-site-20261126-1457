@@ -314,7 +314,7 @@ function renderReports() {
   $("#insights").innerHTML =
     `<li>Housing is the largest cost: ${money(spentByCat("housing"))}, ${pct(spentByCat("housing") / spent * 100)} of all spending — rent alone is 27% of take-home pay.</li>` +
     `<li>Average monthly spending over the last 6 months is ${money0(avg)}; November (${money0(spent)}) is ${money0(avg - spent)} below that average.</li>` +
-    `<li>Savings rate is ${pct(totalSaved() / totalIncome() * 100)} of take-home pay (${money(totalSaved())} of ${money(totalIncome())}), above the 20% guideline.</li>` +
+    `<li>Savings rate is ${pct(totalSaved() / totalIncome() * 100)} of take-home pay (${money(totalSaved())} of ${money(totalIncome())}), just below the 20% guideline — the household is close, and dining out is the easiest place to find the gap.</li>` +
     (overCats.length
       ? `<li>Over budget this month: ${overCats.join(", ")}. Dining out is the one to watch — ${money(spentByCat("dining"))} against a ${money(catById("dining").budget)} budget, the third month running it has overshot.</li>`
       : `<li>No category is over budget this month.</li>`) +
